@@ -48,6 +48,12 @@ public class TodoService {
         return repository.findByUserId(entity.getUserId());
     }
 
+    public List<TodoEntity> read(final TodoEntity entity) {
+        validate(entity);
+
+        return repository.findByUserId(entity.getUserId());
+    }
+
     // 리팩토링한 메서드
     private void validate(final TodoEntity entity) {
         if(entity == null) {

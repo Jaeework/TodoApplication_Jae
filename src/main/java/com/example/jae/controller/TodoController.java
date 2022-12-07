@@ -65,4 +65,25 @@ public class TodoController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+    @GetMapping("/read")
+    public ResponseEntity<?> readTodo(@RequestParam String userId) {
+        try {
+            TodoEntity entity = TodoEntity.builder().userId(userId).build();
+
+            List<TodoEntity> entities = service.read(entity);
+
+            List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+
+        } catch(Exception e) {
+            String error = e.getMessage();
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }
