@@ -51,6 +51,17 @@ public class TodoService {
     public List<TodoEntity> read(final TodoEntity entity) {
         validate(entity);
 
+        log.info("User Id : {} 's todo list returned.", entity.getUserId());
+        return repository.findByUserId(entity.getUserId());
+    }
+
+    public List<TodoEntity> update(TodoEntity entity) {
+
+        validate(entity);
+
+        repository.save(entity);
+        log.info("Entity Id : {} was updated.", entity.getId());
+
         return repository.findByUserId(entity.getUserId());
     }
 
@@ -65,5 +76,17 @@ public class TodoService {
             log.warn("Unknown user.");
             throw new RuntimeException("Unknown user.");
         }
+    }
+
+
+    public List<TodoEntity> delete(TodoEntity entity) {
+
+        validate(entity);
+
+        repository.delete(entity);
+
+        log.info("Entity Id : {} was deleted.", entity.getId());
+
+        return repository.findByUserId(entity.getUserId());
     }
 }
