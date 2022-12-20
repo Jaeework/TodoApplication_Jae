@@ -79,14 +79,24 @@ public class TodoService {
     }
 
 
-    public List<TodoEntity> delete(TodoEntity entity) {
+    public String delete(TodoEntity entity) {
 
-        validate(entity);
+        if(!repository.existsById(entity.getId())) {
+            log.warn("Entity Id {} does not exist.", entity.getId());
+            throw new RuntimeException("Entity does not exist.");
+        }
 
-        repository.delete(entity);
+        //validate(entity);
 
-        log.info("Entity Id : {} was deleted.", entity.getId());
+        try {
+            repository.deleteById(entity.getId());
 
-        return repository.findByUserId(entity.getUserId());
+            log.info("Entity Id : {} was deleted.", entity.getId());
+            String message = String.format("Entity Id %s was deleted successfully", entity.getId());
+            return message;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete the entity.");
+        }
+        //return repository.findByUserId(entity.getUserId());
     }
 }

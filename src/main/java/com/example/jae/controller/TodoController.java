@@ -105,7 +105,6 @@ public class TodoController {
 
             return ResponseEntity.ok().body(response);
 
-
         } catch (Exception e) {
             String error = e.getMessage();
             ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
@@ -117,19 +116,25 @@ public class TodoController {
     @DeleteMapping
     public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
         try {
+            /*
+
             String temporaryUserId = "temporary-user";
 
             TodoEntity entity = TodoDTO.toEntity(dto);
 
             entity.setUserId(temporaryUserId);
 
-            List<TodoEntity> entities = service.delete(entity);
+            */
+            TodoEntity entity = TodoDTO.toEntity(dto);
 
-            List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+            String message = service.delete(entity);
 
-            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+            List<String> messages = new ArrayList<>() {{ add(message); }};
+
+            ResponseDTO<String> response = ResponseDTO.<String>builder().data(messages).build();
 
             return ResponseEntity.ok().body(response);
+
         } catch (Exception e) {
             String error = e.getMessage();
             ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
